@@ -366,6 +366,23 @@
             document.body.appendChild(openBtn);
         }
 
+        // Second button above size variants
+        var openBtn2 = document.createElement('button');
+        openBtn2.className = 'q-btn-trigger-ia';
+        openBtn2.id = 'q-open-ia-2';
+        openBtn2.style.cssText = 'position:relative; top:auto; right:auto; width:100%; margin:0 0 10px 0; padding:12px 18px; font-size:10px;';
+        var userIcon2 = document.createElement('i');
+        userIcon2.className = 'ph ph-user';
+        var btnText2 = document.createElement('span');
+        btnText2.textContent = 'Provador Virtual';
+        openBtn2.appendChild(userIcon2);
+        openBtn2.appendChild(btnText2);
+
+        var variantsContainer = document.querySelector('.js-product-form .js-variation-option, .js-product-form [data-variant-id], #product_form .radio-button-container, #product_form .form-group');
+        if (variantsContainer) {
+            variantsContainer.parentNode.insertBefore(openBtn2, variantsContainer);
+        }
+
         var genBtn = document.getElementById('q-btn-generate');
         var closeBtn = document.getElementById('q-close-btn');
         var backBtn = document.getElementById('q-btn-back');
@@ -376,10 +393,12 @@
 
         var userPhoto = null;
 
-        openBtn.onclick = function() {
+        function openModal() {
             genBtn.style.display = 'block';
             modal.style.display = 'flex';
-        };
+        }
+        openBtn.onclick = openModal;
+        openBtn2.onclick = openModal;
 
         closeBtn.onclick = function() { modal.style.display = 'none'; };
         backBtn.onclick = function() { modal.style.display = 'none'; };
