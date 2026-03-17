@@ -1,8 +1,6 @@
 (function () {
-    // --- Configuração ---
     const WEBHOOK_PROVA = 'https://n8n.segredosdodrop.com/webhook/quantic-materialize';
 
-    // --- Estilos Baseados na DOPE ---
     const styles = `
         :root {
             --q-primary: #000000;
@@ -45,7 +43,6 @@
         .q-tip-item { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--q-text-light); }
         .q-tip-item i { color: var(--q-primary); font-size: 20px; }
         .q-lead-form { margin: 30px 0 20px; display: flex; flex-direction: column; gap: 20px; text-align: left; }
-        .q-input-row { display: flex; gap: 15px; }
         .q-group { flex: 1; }
         .q-group label { display: block; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; color: var(--q-text); margin-bottom: 8px; text-transform: uppercase; }
         .q-input { width: 100%; padding: 15px; border: 1px solid var(--q-border); font-size: 13px; font-family: 'Inter', sans-serif; background: transparent; color: var(--q-text); outline: none; box-sizing: border-box; }
@@ -63,8 +60,6 @@
         .q-status-msg { display:none; font-size: 10px; letter-spacing: 1px; color: #ef4444; margin-top: 8px; font-weight: 600; text-align: left; text-transform: uppercase; }
         @keyframes q-slide { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
         @keyframes q-pulse-text { 0%, 100% { opacity: 0.4; transform: scale(0.98); } 50% { opacity: 1; transform: scale(1); } }
-
-        /* Oculta scrollbar */
         .q-content-scroll::-webkit-scrollbar { width: 4px; }
         .q-content-scroll::-webkit-scrollbar-track { background: transparent; }
         .q-content-scroll::-webkit-scrollbar-thumb { background: #e5e5e5; }
@@ -77,7 +72,6 @@
         const card = document.createElement('div');
         card.className = 'q-card-ia';
 
-        // Close button
         const closeBtn = document.createElement('button');
         closeBtn.type = 'button';
         closeBtn.className = 'q-close-ia';
@@ -85,11 +79,10 @@
         closeBtn.textContent = '\u00D7';
         card.appendChild(closeBtn);
 
-        // Content scroll
         const contentScroll = document.createElement('div');
         contentScroll.className = 'q-content-scroll';
 
-        // Header
+        // Header with logo
         const header = document.createElement('div');
         header.id = 'q-header-provador';
         const logo = document.createElement('img');
@@ -107,11 +100,10 @@
         const stepUpload = document.createElement('div');
         stepUpload.id = 'q-step-upload';
 
-        // Lead form
+        // Lead form - only WhatsApp
         const leadForm = document.createElement('div');
         leadForm.className = 'q-lead-form';
 
-        // Phone group
         const phoneGroup = document.createElement('div');
         phoneGroup.className = 'q-group';
         const phoneLabel = document.createElement('label');
@@ -131,55 +123,22 @@
         phoneGroup.appendChild(phoneError);
         leadForm.appendChild(phoneGroup);
 
-        // Height/Weight row
-        const inputRow = document.createElement('div');
-        inputRow.className = 'q-input-row';
-
-        const heightGroup = document.createElement('div');
-        heightGroup.className = 'q-group';
-        const heightLabel = document.createElement('label');
-        heightLabel.textContent = 'Altura (cm)';
-        const heightInput = document.createElement('input');
-        heightInput.type = 'text';
-        heightInput.id = 'q-h-val';
-        heightInput.className = 'q-input';
-        heightInput.placeholder = 'Ex: 175';
-        heightGroup.appendChild(heightLabel);
-        heightGroup.appendChild(heightInput);
-
-        const weightGroup = document.createElement('div');
-        weightGroup.className = 'q-group';
-        const weightLabel = document.createElement('label');
-        weightLabel.textContent = 'Peso (kg)';
-        const weightInput = document.createElement('input');
-        weightInput.type = 'text';
-        weightInput.id = 'q-w-val';
-        weightInput.className = 'q-input';
-        weightInput.placeholder = 'Ex: 80';
-        weightGroup.appendChild(weightLabel);
-        weightGroup.appendChild(weightInput);
-
-        inputRow.appendChild(heightGroup);
-        inputRow.appendChild(weightGroup);
-        leadForm.appendChild(inputRow);
         stepUpload.appendChild(leadForm);
 
-        // Tips text
+        // Tips
         const tipsText = document.createElement('p');
         tipsText.style.cssText = 'margin: 30px 0 10px; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--q-text-light); text-align: center;';
         tipsText.textContent = 'Sua foto deve seguir estes requisitos:';
         stepUpload.appendChild(tipsText);
 
-        // Tips grid
         const tipsGrid = document.createElement('div');
         tipsGrid.className = 'q-tips-grid';
         tipsGrid.style.marginTop = '0';
-        const tipData = [
+        [
             { icon: 'ph ph-t-shirt', text: 'Com Roupa' },
             { icon: 'ph ph-person', text: 'Corpo Inteiro' },
             { icon: 'ph ph-sun', text: 'Boa Luz' }
-        ];
-        tipData.forEach(tip => {
+        ].forEach(function(tip) {
             const item = document.createElement('div');
             item.className = 'q-tip-item';
             const icon = document.createElement('i');
@@ -226,7 +185,6 @@
         uploadArea.appendChild(preView);
         stepUpload.appendChild(uploadArea);
 
-        // Generate button
         const genBtn = document.createElement('button');
         genBtn.className = 'q-btn-black';
         genBtn.id = 'q-btn-generate';
@@ -236,7 +194,7 @@
 
         contentScroll.appendChild(stepUpload);
 
-        // Loading box
+        // Loading
         const loadingBox = document.createElement('div');
         loadingBox.className = 'q-loader-ui';
         loadingBox.id = 'q-loading-box';
@@ -252,7 +210,7 @@
         loadingBox.appendChild(loadingBar);
         contentScroll.appendChild(loadingBox);
 
-        // Result step
+        // Result
         const stepResult = document.createElement('div');
         stepResult.id = 'q-step-result';
         stepResult.style.cssText = 'display:none; flex-direction:column; align-items:center;';
@@ -316,41 +274,67 @@
         return wrapper;
     }
 
+    function getProductImageUrl() {
+        var selectors = [
+            '.js-product-slide-img',
+            '.product-slider-image',
+            '.js-product-slide-link img',
+            '.product-image-container img',
+            '[data-store^="product-image"] img',
+            'img[srcset]'
+        ];
+        for (var i = 0; i < selectors.length; i++) {
+            var tag = document.querySelector(selectors[i]);
+            if (tag) {
+                var url = tag.currentSrc || tag.src || tag.dataset.src || '';
+                if (url && url.indexOf('data:') !== 0) return url;
+                // try srcset
+                var srcset = tag.getAttribute('srcset') || tag.dataset.srcset || '';
+                if (srcset) {
+                    var first = srcset.split(',')[0].trim().split(' ')[0];
+                    if (first && first.indexOf('data:') !== 0) return first;
+                }
+            }
+        }
+        var og = document.querySelector('meta[property="og:image"]');
+        return og ? og.content : '';
+    }
+
     function init() {
         if (!document.getElementById('q-inter-font')) {
-            const fontLink = document.createElement('link');
+            var fontLink = document.createElement('link');
             fontLink.id = 'q-inter-font';
             fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
             fontLink.rel = 'stylesheet';
             document.head.appendChild(fontLink);
         }
         if (!window.phosphorIconsLoaded) {
-            const phosphorScript = document.createElement('script');
+            var phosphorScript = document.createElement('script');
             phosphorScript.src = 'https://unpkg.com/@phosphor-icons/web';
             document.head.appendChild(phosphorScript);
             window.phosphorIconsLoaded = true;
         }
 
-        const styleTag = document.createElement('style');
+        var styleTag = document.createElement('style');
         styleTag.textContent = styles;
         document.head.appendChild(styleTag);
 
-        const modalEl = createModalHTML();
+        var modalEl = createModalHTML();
         document.body.appendChild(modalEl);
 
-        const modal = document.getElementById('q-modal-ia');
-        const openBtn = document.createElement('button');
+        var modal = document.getElementById('q-modal-ia');
+        var openBtn = document.createElement('button');
         openBtn.className = 'q-btn-trigger-ia';
         openBtn.id = 'q-open-ia';
-        const userIcon = document.createElement('i');
+        var userIcon = document.createElement('i');
         userIcon.className = 'ph ph-user';
-        const btnText = document.createElement('span');
+        var btnText = document.createElement('span');
         btnText.textContent = 'Provador Virtual';
         openBtn.appendChild(userIcon);
         openBtn.appendChild(btnText);
 
-        // Nuvemshop product image selectors
-        const imgContainers = [
+        // Nuvemshop selectors
+        var imgContainers = [
             '.product-image-container',
             '.js-swiper-product',
             '.product-image-column',
@@ -361,15 +345,14 @@
             '#single-product .col-md-auto:first-child'
         ];
 
-        let foundContainer = false;
-        for (const selector of imgContainers) {
-            const container = document.querySelector(selector);
+        var foundContainer = false;
+        for (var i = 0; i < imgContainers.length; i++) {
+            var container = document.querySelector(imgContainers[i]);
             if (container) {
                 if (window.getComputedStyle(container).position === 'static') {
                     container.style.position = 'relative';
                 }
                 container.appendChild(openBtn);
-
                 openBtn.style.position = 'absolute';
                 openBtn.style.top = '15px';
                 openBtn.style.right = '15px';
@@ -377,7 +360,6 @@
                 openBtn.style.transform = 'none';
                 openBtn.style.margin = '0';
                 openBtn.style.bottom = 'auto';
-
                 foundContainer = true;
                 break;
             }
@@ -393,44 +375,44 @@
             document.body.appendChild(openBtn);
         }
 
-        const genBtn = document.getElementById('q-btn-generate');
-        const buyBtn = document.getElementById('q-add-to-cart-btn');
-        const closeBtn = document.getElementById('q-close-btn');
-        const backBtn = document.getElementById('q-btn-back');
-        const retryBtn = document.getElementById('q-retry-btn');
-        const realInput = document.getElementById('q-real-input');
-        const triggerUpload = document.getElementById('q-trigger-upload');
-        const phoneInput = document.getElementById('q-phone');
+        var genBtn = document.getElementById('q-btn-generate');
+        var buyBtn = document.getElementById('q-add-to-cart-btn');
+        var closeBtn = document.getElementById('q-close-btn');
+        var backBtn = document.getElementById('q-btn-back');
+        var retryBtn = document.getElementById('q-retry-btn');
+        var realInput = document.getElementById('q-real-input');
+        var triggerUpload = document.getElementById('q-trigger-upload');
+        var phoneInput = document.getElementById('q-phone');
 
-        let userPhoto = null;
-        let recommendedSize = "M";
+        var userPhoto = null;
+        var recommendedSize = 'M';
 
-        openBtn.onclick = () => {
+        openBtn.onclick = function() {
             genBtn.style.display = 'block';
             modal.style.display = 'flex';
         };
 
-        closeBtn.onclick = () => modal.style.display = 'none';
-        backBtn.onclick = () => modal.style.display = 'none';
-        retryBtn.onclick = () => {
+        closeBtn.onclick = function() { modal.style.display = 'none'; };
+        backBtn.onclick = function() { modal.style.display = 'none'; };
+        retryBtn.onclick = function() {
             document.getElementById('q-step-result').style.display = 'none';
             document.getElementById('q-step-upload').style.display = 'block';
             userPhoto = null;
             document.getElementById('q-pre-view').style.display = 'none';
             checkFields();
         };
-        triggerUpload.onclick = () => realInput.click();
+        triggerUpload.onclick = function() { realInput.click(); };
 
         phoneInput.addEventListener('input', function (e) {
-            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
             e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
             checkFields();
         });
 
-        const checkFields = () => {
-            const phoneNumbers = phoneInput.value.replace(/\D/g, '');
-            const isPhoneValid = phoneNumbers.length >= 10 && phoneNumbers.length <= 11;
-            const phoneError = document.getElementById('q-phone-error');
+        function checkFields() {
+            var phoneNumbers = phoneInput.value.replace(/\D/g, '');
+            var isPhoneValid = phoneNumbers.length >= 10 && phoneNumbers.length <= 11;
+            var phoneError = document.getElementById('q-phone-error');
 
             if (phoneInput.value.length > 0 && !isPhoneValid) {
                 phoneError.style.display = 'block';
@@ -440,19 +422,15 @@
                 phoneInput.style.borderColor = 'var(--q-border)';
             }
 
-            const allFilled = document.getElementById('q-h-val').value.length > 0 &&
-                document.getElementById('q-w-val').value.length > 0 &&
-                userPhoto && isPhoneValid;
+            var allFilled = userPhoto && isPhoneValid;
             genBtn.disabled = !allFilled;
-        };
+        }
 
-        ['q-h-val', 'q-w-val'].forEach(id => document.getElementById(id).addEventListener('input', checkFields));
-
-        realInput.onchange = (e) => {
+        realInput.onchange = function(e) {
             userPhoto = e.target.files[0];
             if (userPhoto) {
-                const rd = new FileReader();
-                rd.onload = (ev) => {
+                var rd = new FileReader();
+                rd.onload = function(ev) {
                     document.getElementById('q-pre-img').src = ev.target.result;
                     document.getElementById('q-pre-view').style.display = 'block';
                     checkFields();
@@ -461,125 +439,61 @@
             }
         };
 
-        genBtn.onclick = async () => {
-            const h = document.getElementById('q-h-val').value;
-            const w = document.getElementById('q-w-val').value;
-
-            // Nuvemshop product image - try multiple selectors and attributes
-            let prodImg = '';
-            const imgSelectors = [
-                '.js-product-slide-img',
-                '.product-slider-image',
-                '.js-product-slide-link img',
-                '.product-image-container img',
-                '[data-store^="product-image"] img',
-                'img[srcset]'
-            ];
-            for (const sel of imgSelectors) {
-                const tag = document.querySelector(sel);
-                if (tag) {
-                    prodImg = tag.currentSrc || tag.src || tag.dataset.src || tag.dataset.srcset?.split(' ')[0] || '';
-                    if (prodImg && !prodImg.startsWith('data:')) break;
-                    prodImg = '';
-                }
-            }
-            if (!prodImg) {
-                const ogImg = document.querySelector('meta[property="og:image"]');
-                prodImg = ogImg ? ogImg.content : '';
-            }
-            const prodName = document.querySelector('h1, .js-product-name, .product-name')?.innerText || document.title;
+        genBtn.onclick = function() {
+            var prodImg = getProductImageUrl();
+            var prodName = (document.querySelector('h1') || {}).innerText || document.title;
 
             document.getElementById('q-step-upload').style.display = 'none';
             document.getElementById('q-loading-box').style.display = 'block';
 
-            try {
-                const phoneVal = phoneInput.value.replace(/\D/g, '');
-                const fd = new FormData();
-                fd.append('person_image', userPhoto);
-                fd.append('whatsapp', '55' + phoneVal);
-                fd.append('phone_raw', phoneInput.value);
-                fd.append('height', h);
-                fd.append('weight', w);
-                fd.append('product_name', prodName);
-                fd.append('origin', window.location.origin);
+            var phoneVal = phoneInput.value.replace(/\D/g, '');
+            var fd = new FormData();
+            fd.append('person_image', userPhoto);
+            fd.append('whatsapp', '55' + phoneVal);
+            fd.append('phone_raw', phoneInput.value);
+            fd.append('product_name', prodName);
+            fd.append('product_image_url', prodImg);
+            fd.append('origin', window.location.origin);
 
-                // Send product image URL as string (avoids CORS issues with cross-origin fetch)
-                if (prodImg) {
-                    fd.append('product_image_url', prodImg);
-                    // Also try to send as blob via canvas to avoid CORS
-                    try {
-                        const img = new Image();
-                        img.crossOrigin = 'anonymous';
-                        img.src = prodImg;
-                        await new Promise((resolve, reject) => {
-                            img.onload = resolve;
-                            img.onerror = reject;
-                            setTimeout(reject, 5000);
-                        });
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.naturalWidth;
-                        canvas.height = img.naturalHeight;
-                        canvas.getContext('2d').drawImage(img, 0, 0);
-                        const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
-                        if (blob) fd.append('product_image', blob, 'p.png');
-                    } catch (_) {
-                        // CORS blocked - webhook will use product_image_url instead
+            fetch(WEBHOOK_PROVA, { method: 'POST', body: fd })
+                .then(function(res) {
+                    console.log('Provador webhook status:', res.status);
+                    if (!res.ok) {
+                        return res.text().then(function(t) { throw new Error('Status ' + res.status + ': ' + t); });
                     }
-                }
-
-                const res = await fetch(WEBHOOK_PROVA, { method: 'POST', body: fd });
-                if (res.ok) {
-                    const blob = await res.blob();
-                    const url = URL.createObjectURL(blob);
-                    calculateFinalSize(h, w, prodName);
+                    return res.blob();
+                })
+                .then(function(blob) {
+                    var url = URL.createObjectURL(blob);
+                    recommendedSize = 'M';
+                    document.getElementById('q-res-letter').textContent = recommendedSize;
                     document.getElementById('q-loading-box').style.display = 'none';
                     document.getElementById('q-final-view-img').src = url;
                     document.getElementById('q-step-result').style.display = 'flex';
-                } else {
-                    throw new Error('Falha - status: ' + res.status);
-                }
-            } catch (e) {
-                console.error('Provador Virtual erro:', e);
-                alert("Ocorreu um erro ao processar sua imagem. Tente novamente.");
-                document.getElementById('q-loading-box').style.display = 'none';
-                document.getElementById('q-step-upload').style.display = 'block';
-            }
+                })
+                .catch(function(e) {
+                    console.error('Provador Virtual erro:', e);
+                    alert('Ocorreu um erro ao processar sua imagem. Tente novamente.\n\nDetalhes: ' + e.message);
+                    document.getElementById('q-loading-box').style.display = 'none';
+                    document.getElementById('q-step-upload').style.display = 'block';
+                });
         };
 
-        function calculateFinalSize(h, w, name) {
-            let hInt = parseFloat(h.toString().replace(',', '.'));
-            let wInt = parseFloat(w.toString().replace(',', '.'));
-            if (hInt < 3) hInt = hInt * 100;
-
-            let size = "M";
-            if (wInt < 60) size = "PP";
-            else if (wInt < 68) size = "P";
-            else if (wInt < 76) size = "M";
-            else if (wInt < 84) size = "G";
-            else if (wInt < 92) size = "GG";
-            else if (wInt < 100) size = "XG";
-            else size = "XXG";
-
-            recommendedSize = size;
-            document.getElementById('q-res-letter').textContent = size;
-        }
-
         buyBtn.onclick = function () {
-            this.textContent = "Processando...";
+            this.textContent = 'Processando...';
             this.disabled = true;
 
-            // Nuvemshop add-to-cart integration
-            const nuvemBtn = document.querySelector('.js-addtocart, .js-prod-submit-btn, button[type="submit"].addtocart, input.addtocart, .btn-add-to-cart, form[action*="/cart"] button[type="submit"]');
+            var nuvemBtn = document.querySelector('.js-addtocart, .js-prod-submit-btn, button[type="submit"].addtocart, input.addtocart, .btn-add-to-cart, form[action*="/cart"] button[type="submit"]');
 
             if (nuvemBtn) {
                 modal.style.display = 'none';
                 nuvemBtn.click();
             } else {
-                alert("Selecione o tamanho " + recommendedSize);
+                alert('Selecione o tamanho ' + recommendedSize);
                 modal.style.display = 'none';
             }
 
-            this.textContent = "Adicionar ao Carrinho";
+            this.textContent = 'Adicionar ao Carrinho';
             this.disabled = false;
         };
     }
