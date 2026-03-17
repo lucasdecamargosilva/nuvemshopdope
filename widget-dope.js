@@ -302,6 +302,15 @@
     }
 
     function init() {
+        // Only show for allowed categories: camisetas, polos, jorts/shorts
+        var breadcrumb = document.querySelector('.breadcrumbs, .breadcrumb, nav[aria-label="breadcrumb"]');
+        var breadcrumbText = breadcrumb ? breadcrumb.textContent.toLowerCase() : '';
+        var pageTitle = (document.querySelector('h1') || {}).textContent || '';
+        var checkText = breadcrumbText + ' ' + pageTitle.toLowerCase();
+        var allowedCategories = ['camiseta', 'polo', 'jort', 'short'];
+        var isAllowed = allowedCategories.some(function(cat) { return checkText.indexOf(cat) !== -1; });
+        if (!isAllowed) return;
+
         if (!document.getElementById('q-inter-font')) {
             var fontLink = document.createElement('link');
             fontLink.id = 'q-inter-font';
