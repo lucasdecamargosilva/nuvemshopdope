@@ -224,29 +224,10 @@
         resultImgWrap.appendChild(finalImg);
         stepResult.appendChild(resultImgWrap);
 
-        const sizeRow = document.createElement('div');
-        sizeRow.style.cssText = 'border-top:1px solid var(--q-border); border-bottom:1px solid var(--q-border); padding:20px 0; width:100%; margin-bottom:30px; display:flex; justify-content:space-between; align-items:center;';
-        const sizeLabel = document.createElement('span');
-        sizeLabel.style.cssText = 'font-size:10px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--q-text-light);';
-        sizeLabel.textContent = 'Tamanho Ideal';
-        const sizeLetter = document.createElement('div');
-        sizeLetter.id = 'q-res-letter';
-        sizeLetter.style.cssText = 'font-size:24px; font-weight:400; font-family:monospace; line-height:1;';
-        sizeLetter.textContent = 'M';
-        sizeRow.appendChild(sizeLabel);
-        sizeRow.appendChild(sizeLetter);
-        stepResult.appendChild(sizeRow);
-
-        const buyBtn = document.createElement('button');
-        buyBtn.className = 'q-btn-buy';
-        buyBtn.id = 'q-add-to-cart-btn';
-        buyBtn.textContent = 'Adicionar ao Carrinho';
-        stepResult.appendChild(buyBtn);
-
         const backBtn = document.createElement('button');
-        backBtn.className = 'q-btn-outline';
+        backBtn.className = 'q-btn-black';
         backBtn.id = 'q-btn-back';
-        backBtn.textContent = 'Voltar';
+        backBtn.textContent = 'Voltar ao Produto';
         stepResult.appendChild(backBtn);
 
         const retryBtn = document.createElement('p');
@@ -386,7 +367,6 @@
         }
 
         var genBtn = document.getElementById('q-btn-generate');
-        var buyBtn = document.getElementById('q-add-to-cart-btn');
         var closeBtn = document.getElementById('q-close-btn');
         var backBtn = document.getElementById('q-btn-back');
         var retryBtn = document.getElementById('q-retry-btn');
@@ -395,7 +375,6 @@
         var phoneInput = document.getElementById('q-phone');
 
         var userPhoto = null;
-        var recommendedSize = 'M';
 
         openBtn.onclick = function() {
             genBtn.style.display = 'block';
@@ -483,8 +462,6 @@
                         throw new Error('Imagem vazia retornada pelo servidor');
                     }
                     var url = URL.createObjectURL(blob);
-                    recommendedSize = 'M';
-                    document.getElementById('q-res-letter').textContent = recommendedSize;
                     document.getElementById('q-loading-box').style.display = 'none';
                     document.getElementById('q-final-view-img').src = url;
                     document.getElementById('q-step-result').style.display = 'flex';
@@ -497,23 +474,6 @@
                 });
         };
 
-        buyBtn.onclick = function () {
-            this.textContent = 'Processando...';
-            this.disabled = true;
-
-            var nuvemBtn = document.querySelector('.js-addtocart, .js-prod-submit-btn, button[type="submit"].addtocart, input.addtocart, .btn-add-to-cart, form[action*="/cart"] button[type="submit"]');
-
-            if (nuvemBtn) {
-                modal.style.display = 'none';
-                nuvemBtn.click();
-            } else {
-                alert('Selecione o tamanho ' + recommendedSize);
-                modal.style.display = 'none';
-            }
-
-            this.textContent = 'Adicionar ao Carrinho';
-            this.disabled = false;
-        };
     }
 
     if (document.readyState === 'complete') {
