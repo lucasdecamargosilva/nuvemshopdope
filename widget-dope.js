@@ -464,11 +464,23 @@
             const h = document.getElementById('q-h-val').value;
             const w = document.getElementById('q-w-val').value;
 
-            // Nuvemshop product image selectors
-            const prodImgTag = document.querySelector('.js-product-slide-img, .product-slider-image, img[srcset]');
+            // Nuvemshop product image - try multiple selectors and attributes
             let prodImg = '';
-            if (prodImgTag) {
-                prodImg = prodImgTag.currentSrc || prodImgTag.src || prodImgTag.dataset.src || '';
+            const imgSelectors = [
+                '.js-product-slide-img',
+                '.product-slider-image',
+                '.js-product-slide-link img',
+                '.product-image-container img',
+                '[data-store^="product-image"] img',
+                'img[srcset]'
+            ];
+            for (const sel of imgSelectors) {
+                const tag = document.querySelector(sel);
+                if (tag) {
+                    prodImg = tag.currentSrc || tag.src || tag.dataset.src || tag.dataset.srcset?.split(' ')[0] || '';
+                    if (prodImg && !prodImg.startsWith('data:')) break;
+                    prodImg = '';
+                }
             }
             if (!prodImg) {
                 const ogImg = document.querySelector('meta[property="og:image"]');
@@ -490,9 +502,28 @@
                 fd.append('product_name', prodName);
                 fd.append('origin', window.location.origin);
 
+                // Send product image URL as string (avoids CORS issues with cross-origin fetch)
                 if (prodImg) {
-                    const b = await fetch(prodImg).then(r => r.blob());
-                    fd.append('product_image', b, 'p.png');
+                    fd.append('product_image_url', prodImg);
+                    // Also try to send as blob via canvas to avoid CORS
+                    try {
+                        const img = new Image();
+                        img.crossOrigin = 'anonymous';
+                        img.src = prodImg;
+                        await new Promise((resolve, reject) => {
+                            img.onload = resolve;
+                            img.onerror = reject;
+                            setTimeout(reject, 5000);
+                        });
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        canvas.getContext('2d').drawImage(img, 0, 0);
+                        const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+                        if (blob) fd.append('product_image', blob, 'p.png');
+                    } catch (_) {
+                        // CORS blocked - webhook will use product_image_url instead
+                    }
                 }
 
                 const res = await fetch(WEBHOOK_PROVA, { method: 'POST', body: fd });
@@ -504,9 +535,14 @@
                     document.getElementById('q-final-view-img').src = url;
                     document.getElementById('q-step-result').style.display = 'flex';
                 } else {
-                    throw new Error('Falha');
+                    throw new Error('Falha - status: ' + res.status);
                 }
-            } catch (e) { alert("Ocorreu um erro ao processar sua imagem. Tente novamente."); location.reload(); }
+            } catch (e) {
+                console.error('Provador Virtual erro:', e);
+                alert("Ocorreu um erro ao processar sua imagem. Tente novamente.");
+                document.getElementById('q-loading-box').style.display = 'none';
+                document.getElementById('q-step-upload').style.display = 'block';
+            }
         };
 
         function calculateFinalSize(h, w, name) {
