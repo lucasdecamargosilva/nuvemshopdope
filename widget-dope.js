@@ -366,11 +366,11 @@
             document.body.appendChild(openBtn);
         }
 
-        // Second button above size variants
+        // Second button between color and size variants
         var openBtn2 = document.createElement('button');
         openBtn2.className = 'q-btn-trigger-ia';
         openBtn2.id = 'q-open-ia-2';
-        openBtn2.style.cssText = 'position:relative; top:auto; right:auto; width:100%; margin:0 0 10px 0; padding:12px 18px; font-size:10px;';
+        openBtn2.style.cssText = 'position:relative; top:auto; right:auto; width:100%; margin:0; padding:10px 18px; font-size:9px; border-left:none; border-right:none;';
         var userIcon2 = document.createElement('i');
         userIcon2.className = 'ph ph-user';
         var btnText2 = document.createElement('span');
@@ -378,9 +378,17 @@
         openBtn2.appendChild(userIcon2);
         openBtn2.appendChild(btnText2);
 
-        var variantsContainer = document.querySelector('.js-product-form .js-variation-option, .js-product-form [data-variant-id], #product_form .radio-button-container, #product_form .form-group');
-        if (variantsContainer) {
-            variantsContainer.parentNode.insertBefore(openBtn2, variantsContainer);
+        // Find size variant group (the one after the color group)
+        var variantGroups = document.querySelectorAll('.js-product-variants .js-product-variants-group');
+        var sizeGroup = null;
+        for (var j = 0; j < variantGroups.length; j++) {
+            if (!variantGroups[j].classList.contains('js-color-variants-container')) {
+                sizeGroup = variantGroups[j];
+                break;
+            }
+        }
+        if (sizeGroup) {
+            sizeGroup.parentNode.insertBefore(openBtn2, sizeGroup);
         }
 
         var genBtn = document.getElementById('q-btn-generate');
