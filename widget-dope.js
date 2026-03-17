@@ -11,22 +11,24 @@
             --q-gray: #f5f5f5;
             --q-text: #000000;
             --q-text-light: #666666;
+            --q-accent: #D4A017;
         }
         .q-btn-trigger-ia {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 100;
-            background: var(--q-bg);
-            color: var(--q-text); border: 1px solid var(--q-border);
-            padding: 5px 24px; font-family: 'Inter', sans-serif;
-            font-weight: 500; font-size: 9px; letter-spacing: 1px; cursor: pointer; display: flex;
+            position: absolute; top: 60px; left: 20px; z-index: 100;
+            background: transparent;
+            color: var(--q-accent); border: 1px solid var(--q-accent);
+            padding: 6px 18px; font-family: 'Inter', sans-serif;
+            font-weight: 600; font-size: 9px; letter-spacing: 1.5px; cursor: pointer; display: flex;
             align-items: center; justify-content: center; gap: 6px; text-transform: uppercase;
             transition: 0.3s ease;
             white-space: nowrap;
         }
-        .q-btn-trigger-ia i { font-size: 14px; }
+        .q-btn-trigger-ia i { font-size: 14px; color: var(--q-accent); }
         .q-btn-trigger-ia:hover {
-            background: var(--q-primary);
-            color: var(--q-bg);
+            background: var(--q-accent);
+            color: #000000;
         }
+        .q-btn-trigger-ia:hover i { color: #000000; }
         #q-modal-ia {
             display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.98);
             z-index: 999999; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;
@@ -368,9 +370,9 @@
                 container.appendChild(openBtn);
 
                 openBtn.style.position = 'absolute';
-                openBtn.style.top = '0px';
-                openBtn.style.left = '50%';
-                openBtn.style.transform = 'translateX(-50%)';
+                openBtn.style.top = '60px';
+                openBtn.style.left = '20px';
+                openBtn.style.transform = 'none';
                 openBtn.style.margin = '0';
                 openBtn.style.bottom = 'auto';
                 openBtn.style.right = 'auto';
