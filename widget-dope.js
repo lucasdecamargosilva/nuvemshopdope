@@ -315,6 +315,7 @@
 
         var modal = document.getElementById('q-modal-ia');
         var openBtn = document.createElement('button');
+        openBtn.type = 'button';
         openBtn.className = 'q-btn-trigger-ia';
         openBtn.id = 'q-open-ia';
         var userIcon = document.createElement('i');
@@ -368,6 +369,7 @@
 
         // Second button between color and size variants
         var openBtn2 = document.createElement('button');
+        openBtn2.type = 'button';
         openBtn2.className = 'q-btn-trigger-ia';
         openBtn2.id = 'q-open-ia-2';
         openBtn2.style.cssText = 'position:relative; top:auto; right:auto; width:auto; margin:8px 0 8px 12px; padding:6px 16px; font-size:9px; display:flex; border:1px solid var(--q-accent);';
@@ -401,7 +403,8 @@
 
         var userPhoto = null;
 
-        function openModal() {
+        function openModal(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             genBtn.style.display = 'block';
             modal.style.display = 'flex';
         }
