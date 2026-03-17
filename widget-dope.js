@@ -56,7 +56,7 @@
         .q-btn-outline { background: var(--q-bg); color: var(--q-primary); border: 1px solid var(--q-border); width: 100%; padding: 18px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
         .q-btn-outline:hover { background: var(--q-primary); color: var(--q-bg); }
         .q-powered-footer { background: var(--q-bg); padding: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-shrink: 0; border-top: 1px solid var(--q-gray); }
-        .q-quantic-logo { height: 12px; filter: brightness(0); }
+        .q-quantic-logo { height: 24px; filter: brightness(0); }
         .q-loader-ui { display:none; padding: 60px 0; }
         .q-status-msg { display:none; font-size: 10px; letter-spacing: 1px; color: #ef4444; margin-top: 8px; font-weight: 600; text-align: left; text-transform: uppercase; }
         @keyframes q-slide { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
