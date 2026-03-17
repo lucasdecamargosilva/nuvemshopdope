@@ -334,15 +334,15 @@
         openBtn.appendChild(userIcon);
         openBtn.appendChild(btnText);
 
-        // Nuvemshop selectors
+        // Nuvemshop selectors - target the first slide specifically
         var imgContainers = [
+            '.js-product-slide:first-child',
+            '.js-swiper-product .swiper-slide:first-child',
+            '.product-image-container .swiper-slide:first-child',
             '.product-image-container',
             '.js-swiper-product',
             '.product-image-column',
             '[data-store^="product-image"]',
-            '.js-product-slide',
-            '.product-gallery',
-            '.product-slider',
             '#single-product .col-md-auto:first-child'
         ];
 
