@@ -370,7 +370,7 @@
         var openBtn2 = document.createElement('button');
         openBtn2.className = 'q-btn-trigger-ia';
         openBtn2.id = 'q-open-ia-2';
-        openBtn2.style.cssText = 'position:relative; top:auto; right:auto; width:auto; margin:8px auto; padding:5px 14px; font-size:8px; display:flex; border:1px solid var(--q-accent);';
+        openBtn2.style.cssText = 'position:relative; top:auto; right:auto; width:auto; margin:8px 0 8px 12px; padding:6px 16px; font-size:9px; display:flex; border:1px solid var(--q-accent);';
         var userIcon2 = document.createElement('i');
         userIcon2.className = 'ph ph-user';
         var btnText2 = document.createElement('span');
