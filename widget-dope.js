@@ -246,7 +246,7 @@
         footerText.style.cssText = 'font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--q-text-light);';
         footerText.textContent = 'Powered by';
         const footerLogo = document.createElement('img');
-        footerLogo.src = 'https://i.ibb.co/23hMHTRt/logo-quantic-na-melhor-qualidade.png';
+        footerLogo.src = 'https://i.ibb.co/Jj0sWpky/logo-provou-levou-sem-fundo.png';
         footerLogo.className = 'q-quantic-logo';
         footer.appendChild(footerText);
         footer.appendChild(footerLogo);
