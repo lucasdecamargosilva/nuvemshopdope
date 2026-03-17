@@ -245,11 +245,16 @@
         const footerText = document.createElement('span');
         footerText.style.cssText = 'font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--q-text-light);';
         footerText.textContent = 'Powered by';
+        const footerLink = document.createElement('a');
+        footerLink.href = 'https://provoulevou.com.br';
+        footerLink.target = '_blank';
+        footerLink.rel = 'noopener noreferrer';
         const footerLogo = document.createElement('img');
         footerLogo.src = 'https://i.ibb.co/Jj0sWpky/logo-provou-levou-sem-fundo.png';
         footerLogo.className = 'q-quantic-logo';
+        footerLink.appendChild(footerLogo);
         footer.appendChild(footerText);
-        footer.appendChild(footerLogo);
+        footer.appendChild(footerLink);
         card.appendChild(footer);
 
         wrapper.appendChild(card);
