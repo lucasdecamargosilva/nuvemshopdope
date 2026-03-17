@@ -1,6 +1,6 @@
 (function () {
     const WEBHOOK_PROVA = 'https://n8n.segredosdodrop.com/webhook/quantic-materialize';
-    const API_KEY = 'plv_dope_4006e5e76d55539f7ef7e5a8771a6c30';
+    const API_KEY = 'pl_live_27c4eb2dd170722236b299720634953653d9f6cd24bd261fc0233245501980f3';
 
     const styles = `
         :root {
