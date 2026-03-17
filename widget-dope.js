@@ -1,5 +1,6 @@
 (function () {
     const WEBHOOK_PROVA = 'https://n8n.segredosdodrop.com/webhook/quantic-materialize';
+    const API_KEY = 'plv_dope_4006e5e76d55539f7ef7e5a8771a6c30';
 
     const styles = `
         :root {
@@ -440,103 +441,48 @@
         };
 
         genBtn.onclick = function() {
-            var prodImg = getProductImageUrl();
+            var prodImgUrl = getProductImageUrl();
             var prodName = (document.querySelector('h1') || {}).innerText || document.title;
             var phoneVal = phoneInput.value.replace(/\D/g, '');
-
-            console.log('=== PROVADOR VIRTUAL DEBUG ===');
-            console.log('Webhook URL:', WEBHOOK_PROVA);
-            console.log('Product name:', prodName);
-            console.log('Product image URL:', prodImg);
-            console.log('WhatsApp:', '55' + phoneVal);
-            console.log('User photo file:', userPhoto ? userPhoto.name + ' (' + userPhoto.size + ' bytes, ' + userPhoto.type + ')' : 'NULL');
-            console.log('Origin:', window.location.origin);
 
             document.getElementById('q-step-upload').style.display = 'none';
             document.getElementById('q-loading-box').style.display = 'block';
 
-            var fd = new FormData();
-            fd.append('person_image', userPhoto);
-            fd.append('whatsapp', '55' + phoneVal);
-            fd.append('phone_raw', phoneInput.value);
-            fd.append('product_name', prodName);
-            fd.append('product_image_url', prodImg);
-            fd.append('origin', window.location.origin);
+            // Fetch product image as blob, then send everything via FormData
+            fetch(prodImgUrl)
+                .then(function(r) { return r.blob(); })
+                .then(function(prodBlob) {
+                    var fd = new FormData();
+                    fd.append('api_key', API_KEY);
+                    fd.append('person_image', userPhoto);
+                    fd.append('product_image', prodBlob, 'product.png');
+                    fd.append('whatsapp', '55' + phoneVal);
+                    fd.append('phone_raw', phoneInput.value);
+                    fd.append('product_name', prodName);
+                    fd.append('origin', window.location.origin);
 
-            console.log('FormData entries:');
-            fd.forEach(function(value, key) {
-                if (value instanceof File) {
-                    console.log('  ' + key + ': [File] ' + value.name + ' (' + value.size + ' bytes)');
-                } else {
-                    console.log('  ' + key + ':', value);
-                }
-            });
-
-            console.log('Sending fetch to webhook...');
-
-            fetch(WEBHOOK_PROVA, { method: 'POST', body: fd })
+                    return fetch(WEBHOOK_PROVA, { method: 'POST', body: fd });
+                })
                 .then(function(res) {
-                    console.log('Webhook response status:', res.status);
-                    console.log('Webhook response headers:');
-                    res.headers.forEach(function(val, key) { console.log('  ' + key + ':', val); });
-
                     if (!res.ok) {
-                        return res.text().then(function(t) {
-                            console.error('Webhook error body:', t);
-                            throw new Error('Status ' + res.status + ': ' + t);
-                        });
+                        return res.text().then(function(t) { throw new Error('Status ' + res.status + ': ' + t); });
                     }
-
-                    var contentType = res.headers.get('content-type') || '';
-                    console.log('Response content-type:', contentType);
-
-                    // Clone response to read both as text and blob for debugging
-                    return res.clone().text().then(function(textBody) {
-                        console.log('Response body (text, first 500 chars):', textBody.substring(0, 500));
-                        console.log('Response body length:', textBody.length);
-
-                        if (contentType.indexOf('image') !== -1) {
-                            console.log('Response is an image, using as blob');
-                            return res.blob();
-                        } else if (textBody.length > 0) {
-                            // Try to parse as JSON to check for image URL
-                            try {
-                                var jsonData = JSON.parse(textBody);
-                                console.log('Response parsed as JSON:', jsonData);
-                                if (jsonData.image_url || jsonData.url || jsonData.result) {
-                                    var imgUrl = jsonData.image_url || jsonData.url || jsonData.result;
-                                    console.log('Found image URL in JSON:', imgUrl);
-                                    return fetch(imgUrl).then(function(r) { return r.blob(); });
-                                }
-                            } catch(e) {
-                                console.log('Response is not JSON');
-                            }
-                            // Try as blob anyway
-                            return res.blob();
-                        } else {
-                            throw new Error('Response body is empty');
-                        }
-                    });
+                    return res.blob();
                 })
                 .then(function(blob) {
                     if (!blob || blob.size === 0) {
-                        throw new Error('Received empty blob (0 bytes)');
+                        throw new Error('Imagem vazia retornada pelo servidor');
                     }
-                    console.log('Got blob:', blob.size, 'bytes, type:', blob.type);
                     var url = URL.createObjectURL(blob);
                     recommendedSize = 'M';
                     document.getElementById('q-res-letter').textContent = recommendedSize;
                     document.getElementById('q-loading-box').style.display = 'none';
                     document.getElementById('q-final-view-img').src = url;
                     document.getElementById('q-step-result').style.display = 'flex';
-                    console.log('=== PROVADOR VIRTUAL SUCCESS ===');
                 })
                 .catch(function(e) {
-                    console.error('=== PROVADOR VIRTUAL ERROR ===');
-                    console.error('Error:', e);
-                    console.error('Error message:', e.message);
-                    console.error('Error stack:', e.stack);
-                    alert('Erro no provador virtual.\n\nDetalhes: ' + e.message + '\n\nVeja o console (F12) para mais informações.');
+                    console.error('Provador error:', e);
+                    alert('Erro no provador virtual: ' + e.message);
                     document.getElementById('q-loading-box').style.display = 'none';
                     document.getElementById('q-step-upload').style.display = 'block';
                 });
