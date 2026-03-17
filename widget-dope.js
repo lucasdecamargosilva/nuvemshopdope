@@ -92,14 +92,15 @@
         // Header
         const header = document.createElement('div');
         header.id = 'q-header-provador';
+        const logo = document.createElement('img');
+        logo.src = 'https://acdn-us.mitiendanube.com/stores/004/951/445/themes/common/logo-970428037-1768348654-f73a49ab7538c0e848494f65156679521768348654-640-0.webp';
+        logo.alt = 'DOPE';
+        logo.style.cssText = 'max-width: 120px; height: auto; margin: 0 auto 15px; display: block;';
         const h1 = document.createElement('h1');
         h1.style.cssText = 'margin:0 0 10px 0; font-size:20px; font-weight:700; letter-spacing:2px; text-transform:uppercase;';
         h1.textContent = 'Provador Virtual';
-        const subtitle = document.createElement('p');
-        subtitle.style.cssText = 'margin:0; font-size:11px; color:var(--q-text-light); letter-spacing:1px; text-transform:uppercase;';
-        subtitle.textContent = 'DOPE';
+        header.appendChild(logo);
         header.appendChild(h1);
-        header.appendChild(subtitle);
         contentScroll.appendChild(header);
 
         // Step upload
