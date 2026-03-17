@@ -14,8 +14,8 @@
             --q-accent: #D4A017;
         }
         .q-btn-trigger-ia {
-            position: absolute; top: 60px; left: 20px; z-index: 100;
-            background: transparent;
+            position: absolute; top: 15px; right: 15px; z-index: 100;
+            background: #000000;
             color: var(--q-accent); border: 1px solid var(--q-accent);
             padding: 6px 18px; font-family: 'Inter', sans-serif;
             font-weight: 600; font-size: 9px; letter-spacing: 1.5px; cursor: pointer; display: flex;
@@ -370,12 +370,12 @@
                 container.appendChild(openBtn);
 
                 openBtn.style.position = 'absolute';
-                openBtn.style.top = '60px';
-                openBtn.style.left = '20px';
+                openBtn.style.top = '15px';
+                openBtn.style.right = '15px';
+                openBtn.style.left = 'auto';
                 openBtn.style.transform = 'none';
                 openBtn.style.margin = '0';
                 openBtn.style.bottom = 'auto';
-                openBtn.style.right = 'auto';
 
                 foundContainer = true;
                 break;
