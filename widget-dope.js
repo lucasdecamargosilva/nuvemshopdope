@@ -191,6 +191,24 @@
         genBtn.id = 'q-btn-generate';
         genBtn.disabled = true;
         genBtn.textContent = 'Ver no meu corpo';
+        var termsLabel = document.createElement('label');
+        termsLabel.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;cursor:pointer;font-size:11px;line-height:1.4;color:#64748b;';
+        var termsCheckbox = document.createElement('input');
+        termsCheckbox.type = 'checkbox';
+        termsCheckbox.id = 'q-accept-terms';
+        termsCheckbox.style.cssText = 'cursor:pointer;accent-color:#000;';
+        termsLabel.appendChild(termsCheckbox);
+        var termsText = document.createElement('span');
+        termsText.textContent = 'Ao continuar, concordo com os ';
+        var termsLink = document.createElement('a');
+        termsLink.href = 'http://provoulevou.com.br/termos.html';
+        termsLink.target = '_blank';
+        termsLink.style.cssText = 'color:#8b5cf6;text-decoration:underline;';
+        termsLink.textContent = 'Termos e Condi\u00e7\u00f5es';
+        termsText.appendChild(termsLink);
+        termsLabel.appendChild(termsText);
+        stepUpload.appendChild(termsLabel);
+
         stepUpload.appendChild(genBtn);
 
         contentScroll.appendChild(stepUpload);
@@ -433,6 +451,8 @@
             checkFields();
         });
 
+        document.getElementById('q-accept-terms').onchange = checkFields;
+
         function checkFields() {
             var phoneNumbers = phoneInput.value.replace(/\D/g, '');
             var isPhoneValid = phoneNumbers.length >= 10 && phoneNumbers.length <= 11;
@@ -447,7 +467,7 @@
             }
 
             var allFilled = userPhoto && isPhoneValid;
-            genBtn.disabled = !allFilled;
+            genBtn.disabled = !(allFilled && document.getElementById('q-accept-terms').checked);
         }
 
         realInput.onchange = function(e) {
