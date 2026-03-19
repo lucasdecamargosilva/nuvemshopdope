@@ -305,6 +305,28 @@
         return og ? og.content : '';
     }
 
+    var DAILY_LIMIT = 2;
+    var LIMIT_KEY = 'q_dope_daily_tries';
+
+    function getDailyUsage() {
+        try {
+            var data = JSON.parse(localStorage.getItem(LIMIT_KEY) || '{}');
+            var today = new Date().toISOString().slice(0, 10);
+            if (data.date !== today) return { date: today, count: 0 };
+            return data;
+        } catch (e) { return { date: new Date().toISOString().slice(0, 10), count: 0 }; }
+    }
+
+    function incrementUsage() {
+        var usage = getDailyUsage();
+        usage.count++;
+        localStorage.setItem(LIMIT_KEY, JSON.stringify(usage));
+    }
+
+    function hasReachedLimit() {
+        return getDailyUsage().count >= DAILY_LIMIT;
+    }
+
     function init() {
         // Only show for allowed categories: camisetas, polos, jorts/shorts
         var breadcrumb = document.querySelector('.breadcrumbs, .breadcrumb, nav[aria-label="breadcrumb"]');
@@ -428,6 +450,10 @@
 
         function openModal(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
+            if (hasReachedLimit()) {
+                alert('Você atingiu o limite de ' + DAILY_LIMIT + ' provas por dia. Tente novamente amanhã!');
+                return;
+            }
             genBtn.style.display = 'block';
             modal.style.display = 'flex';
         }
@@ -484,6 +510,11 @@
         };
 
         genBtn.onclick = function() {
+            if (hasReachedLimit()) {
+                alert('Você atingiu o limite de ' + DAILY_LIMIT + ' provas por dia. Tente novamente amanhã!');
+                return;
+            }
+            incrementUsage();
             var prodImgUrl = getProductImageUrl();
             var prodName = (document.querySelector('h1') || {}).innerText || document.title;
             var phoneVal = phoneInput.value.replace(/\D/g, '');
