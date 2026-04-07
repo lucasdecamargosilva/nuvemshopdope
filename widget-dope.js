@@ -64,6 +64,12 @@
         .q-content-scroll::-webkit-scrollbar { width: 4px; }
         .q-content-scroll::-webkit-scrollbar-track { background: transparent; }
         .q-content-scroll::-webkit-scrollbar-thumb { background: #e5e5e5; }
+        /* SELETOR DE FOTOS DO PRODUTO */
+        .q-prod-picker { display: flex; gap: 10px; justify-content: center; margin: 15px 0; flex-wrap: wrap; }
+        .q-prod-thumb { width: 80px; height: 80px; overflow: hidden; border: 1px solid var(--q-border); cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .q-prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .q-prod-thumb:hover { border-color: var(--q-accent); }
+        .q-prod-thumb.q-selected { border-color: var(--q-accent); box-shadow: 0 0 0 2px rgba(212,160,23,0.35); }
     `;
 
     function createModalHTML() {
@@ -126,8 +132,24 @@
 
         stepUpload.appendChild(leadForm);
 
+        // Product image picker
+        var pickerLabel = document.createElement('p');
+        pickerLabel.style.cssText = 'font-weight:600; font-size:10px; letter-spacing:1.5px; color:var(--q-text); margin:25px 0 8px; text-transform:uppercase; text-align:center;';
+        pickerLabel.textContent = 'Escolha a foto da pe\u00e7a:';
+        stepUpload.appendChild(pickerLabel);
+
+        var pickerContainer = document.createElement('div');
+        pickerContainer.className = 'q-prod-picker';
+        pickerContainer.id = 'q-prod-picker';
+        stepUpload.appendChild(pickerContainer);
+
+        var pickerWarning = document.createElement('p');
+        pickerWarning.style.cssText = 'font-size:10px; color:#92400e; background:#fef3c7; border:1px solid #fde68a; padding:8px 12px; margin:8px 0 16px; text-align:center; line-height:1.5; font-weight:500;';
+        pickerWarning.textContent = '\u26A0\uFE0F Se escolheu a foto de costas, envie uma foto sua tamb\u00e9m de costas. Se escolheu a frente, envie de frente.';
+        stepUpload.appendChild(pickerWarning);
+
         // Tips
-        const tipsText = document.createElement('p');
+        var tipsText = document.createElement('p');
         tipsText.style.cssText = 'margin: 30px 0 10px; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--q-text-light); text-align: center;';
         tipsText.textContent = 'Sua foto deve seguir estes requisitos:';
         stepUpload.appendChild(tipsText);
@@ -447,6 +469,53 @@
         var phoneInput = document.getElementById('q-phone');
 
         var userPhoto = null;
+        var selectedProductImgUrl = null;
+
+        function populateProductPicker() {
+            var picker = document.getElementById('q-prod-picker');
+            if (!picker) return;
+            picker.textContent = '';
+            var thumbs = document.querySelectorAll('.js-product-thumb');
+            var max = Math.min(thumbs.length, 4);
+            for (var t = 0; t < max; t++) {
+                (function(idx) {
+                    var anchor = thumbs[idx];
+                    var img = anchor.querySelector('img');
+                    if (!img) return;
+
+                    var srcset = img.getAttribute('srcset') || img.dataset.srcset || '';
+                    var src = '';
+                    if (srcset) {
+                        var entries = srcset.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+                        var lastEntry = entries[entries.length - 1].split(/\s+/)[0];
+                        src = lastEntry.replace(/-\d+-\d+\.webp$/, '-1024-1024.webp');
+                    }
+                    if (!src) {
+                        src = (window.LS && window.LS.variants && window.LS.variants[idx] && window.LS.variants[idx].image_url)
+                            || (window.LS && window.LS.variants && window.LS.variants[0] && window.LS.variants[0].image_url)
+                            || (document.querySelector('meta[property="og:image"]') || {}).content
+                            || '';
+                    }
+                    var thumbSrc = src.replace('-1024-1024.webp', '-640-0.webp') || src;
+
+                    var div = document.createElement('div');
+                    div.className = 'q-prod-thumb' + (idx === 0 ? ' q-selected' : '');
+                    div.dataset.src = src;
+                    var thumbImg = document.createElement('img');
+                    thumbImg.src = thumbSrc;
+                    thumbImg.alt = 'Foto ' + (idx + 1);
+                    div.appendChild(thumbImg);
+                    div.onclick = function() {
+                        var allThumbs = document.querySelectorAll('.q-prod-thumb');
+                        for (var a = 0; a < allThumbs.length; a++) allThumbs[a].classList.remove('q-selected');
+                        div.classList.add('q-selected');
+                        selectedProductImgUrl = src;
+                    };
+                    picker.appendChild(div);
+                    if (idx === 0) selectedProductImgUrl = src;
+                })(t);
+            }
+        }
 
         function openModal(e) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
@@ -455,6 +524,7 @@
                 return;
             }
             genBtn.style.display = 'block';
+            populateProductPicker();
             modal.style.display = 'flex';
         }
         openBtn.onclick = openModal;
@@ -515,7 +585,7 @@
                 return;
             }
             incrementUsage();
-            var prodImgUrl = getProductImageUrl();
+            var prodImgUrl = selectedProductImgUrl || getProductImageUrl();
             var prodName = (document.querySelector('h1') || {}).innerText || document.title;
             var phoneVal = phoneInput.value.replace(/\D/g, '');
 
