@@ -475,12 +475,12 @@
             var picker = document.getElementById('q-prod-picker');
             if (!picker) return;
             picker.textContent = '';
-            var thumbs = document.querySelectorAll('.js-product-thumb');
-            var max = Math.min(thumbs.length, 4);
+            // Uyuni theme uses .js-product-slide-img inside .js-product-slide (swiper slides)
+            var imgs = document.querySelectorAll('.js-product-slide-img');
+            var max = Math.min(imgs.length, 4);
             for (var t = 0; t < max; t++) {
                 (function(idx) {
-                    var anchor = thumbs[idx];
-                    var img = anchor.querySelector('img');
+                    var img = imgs[idx];
                     if (!img) return;
 
                     var srcset = img.getAttribute('srcset') || img.dataset.srcset || '';
@@ -491,12 +491,10 @@
                         src = lastEntry.replace(/-\d+-\d+\.webp$/, '-1024-1024.webp');
                     }
                     if (!src) {
-                        src = (window.LS && window.LS.variants && window.LS.variants[idx] && window.LS.variants[idx].image_url)
-                            || (window.LS && window.LS.variants && window.LS.variants[0] && window.LS.variants[0].image_url)
-                            || (document.querySelector('meta[property="og:image"]') || {}).content
-                            || '';
+                        src = img.currentSrc || img.src || img.dataset.src || '';
                     }
-                    var thumbSrc = src.replace('-1024-1024.webp', '-640-0.webp') || src;
+                    if (!src || src.indexOf('data:') === 0) return;
+                    var thumbSrc = src.replace('-1024-1024.webp', '-480-0.webp') || src;
 
                     var div = document.createElement('div');
                     div.className = 'q-prod-thumb' + (idx === 0 ? ' q-selected' : '');
